@@ -1,28 +1,19 @@
-import fsm
+import one_hot
 import tester
+import itertools
 
 def run_tests(verbose=True):
-    m = fsm.ControlFSM()
-    t = tester.Tester(m, ['RegDst', 'RegWrite', 'ALUSrcA', 'MemRead', 'MemWrite', 'MemToReg', 'lorD', 'IRWrite', 'PCWrite', 'PCWriteCond', 'AluOP1', 'AluOP0', 'AluSrcB1', 'AluSrcB0', 'PCSrc1', 'PCSrc0'])
+    m = one_hot.SequenceFSM()
+    t = tester.Tester(m, ['z'])
 
-    out = [
-        "-0010-0110000100", # 0
-        "-0000--0000011--", # 1
-        "-0100--0000010--", # 2
-        "-0-10-1000------", # 3
-        "11-000-000------", # 4
-        "-0-01-1000------", # 5
-        "-0100--0001000--", # 6
-        "11-000-000------", # 7
-        "-0100--001010001", # 8
-        "-0-00--010----10"] # 9
-
-    t.check_output(out[0])
-    t.run_test("100011", [out[1], out[2], out[3], out[4], out[0]])
-    t.run_test("101011", [out[1], out[2], out[5], out[0]])
-    t.run_test("000000", [out[1], out[6], out[7], out[0]])
-    t.run_test("000100", [out[1], out[8], out[0]])
-    t.run_test("000010", [out[1], out[9], out[0]])
+    t.check_output(["0"])
+    for test in itertools.product(('0','1'), repeat=4):
+        test = ''.join(test)
+        if test == "1101":
+            expected_output = "1"
+        else:
+            expected_output = "0"
+        t.run_test(test, [expected_output])
 
     return t.status()
 

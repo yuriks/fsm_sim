@@ -25,7 +25,8 @@ class Tester(object):
             test_inputs = [test_inputs] * len(test_outputs)
 
         for ins, outs in zip(test_inputs, test_outputs):
-            self.m.advance_state(string_to_bools(ins))
+            for i in string_to_bools(ins, reverse=False):
+                self.m.advance_state(i)
             if not self._check_state(self.m.get_output(), outs):
                 self.failed_test = self.num_tests
                 return

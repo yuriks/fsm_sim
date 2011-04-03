@@ -5,7 +5,7 @@ except ImportError:
 import cmd
 import sys
 
-import fsm
+import one_hot
 import tools
 
 class FSMShell(cmd.Cmd):
@@ -22,14 +22,12 @@ class FSMShell(cmd.Cmd):
         print "cur_state -- Displays the current FSM state id."
 
     def do_advance(self, args):
-        if len(args) != 6:
-            print "You must provide 6 input bits."
-            return
-        self.m.advance_state(tools.string_to_bools(args))
+        for i in tools.string_to_bools(args, reverse=False):
+            self.m.advance_state(i)
         self.do_cur_state(None)
 
     def help_advance(self):
-        print "advance <input> -- Advances the state machine, using <input> as it's input."
+        print "advance <input> -- Advances the state machine, using <input> as a sequence of inputs."
 
     def do_outputs(self, args):
         o = self.m.get_output()
@@ -43,7 +41,7 @@ class FSMShell(cmd.Cmd):
         sys.exit(0)
 
 if __name__ == "__main__":
-    c = FSMShell(fsm.ControlFSM())
+    c = FSMShell(one_hot.SequenceFSM())
     try:
         c.cmdloop("Type 'help' or '?' for help.")
     except KeyboardInterrupt:

@@ -4,8 +4,8 @@ def compare(bl, s, reverse=True):
             return False
     return True
 
-def string_to_bools(s):
-    return [bool(int(i)) for i in s[::-1]]
+def string_to_bools(s, reverse=True):
+    return [bool(int(i)) for i in reverse and s[::-1] or s]
 
 def bools_to_int(bs):
     val = 0
